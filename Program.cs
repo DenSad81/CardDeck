@@ -12,43 +12,19 @@ class Program
         Player player = new Player("Jonn");
         Diller diller = new Diller();
 
-        ShowSituation(desk, player);
+        Diller.ShowSituation(desk, player);
 
         Console.Write("How match cards player wonts to take: ");
-        int quantityOfCards = GetIntFromConsole();
+        int quantityOfCards = Diller.GetIntFromConsole();
 
         for (int i = 0; i < quantityOfCards; i++)
         {
-            if (diller.TryGiveCard(out Card card))
+            if (desk.TryGiveCard(out Card card))
                 player.AcceptCard(card);
         }
 
-        while (diller.TryGiveCard(out Card card))
-            desk.AcceptCard(card);
-
-
-        ShowSituation(desk, player);
-    }
-
-    private static int GetIntFromConsole()
-    {
-        int digitToOut;
-
-        while (int.TryParse(Console.ReadLine(), out digitToOut) == false)
-        { }
-
-        return digitToOut;
-    }
-
-    private static void ShowSituation(Desk desc, Player player)
-    {
-        Console.WriteLine();
-        Console.WriteLine("Cards into desk");
-        desc.ShowAllCards();
-        Console.WriteLine();
-        Console.WriteLine("Cards into player");
-        player.ShowAllCards();
-    }
+        Diller.ShowSituation(desk, player);
+    }   
 }
 
 class Card
@@ -68,32 +44,37 @@ class Card
     }
 }
 
-class Desk
+class Diller
 {
-    private List<Card> _cards = new List<Card>();
-
-    public void ShowAllCards()
+    public static int GetIntFromConsole()
     {
-        foreach (var card in _cards)
-            card.Show();
+        int digitToOut;
+
+        while (int.TryParse(Console.ReadLine(), out digitToOut) == false)
+        { }
+
+        return digitToOut;
     }
 
-    public void AcceptCard(Card card)
+    public static void ShowSituation(Desk desc, Player player)
     {
-        _cards.Add(card);
+        Console.WriteLine();
+        Console.WriteLine("Cards into desk");
+        desc.ShowAllCards();
+        Console.WriteLine();
+        Console.WriteLine("Cards into player");
+        player.ShowAllCards();
     }
 }
 
-class Diller
+class Desk
 {
-    private List<Card> _cards = new List<Card>() {new Card("bubi", 6),
-                                                  new Card("vini", 7),
-                                                  new Card("bubi", 8),
-                                                  new Card("vini", 9),
-                                                  new Card("bubi", 11),
-                                                  new Card("vini", 12),
-                                                  new Card("bubi", 14),
-                                                  new Card("vini", 19)};
+    private List<Card> _cards = new List<Card>() {new Card("♠", 1),new Card("♣", 1),new Card("♦", 1),new Card("♥", 1),
+                                                  new Card("♠", 2),new Card("♣", 2),new Card("♦", 2),new Card("♥", 2),
+                                                  new Card("♠", 3),new Card("♣", 3),new Card("♦", 3),new Card("♥", 3),
+                                                  new Card("♠", 4),new Card("♣", 4),new Card("♦", 4),new Card("♥", 4),
+                                                  new Card("♠", 5),new Card("♣", 5),new Card("♦", 5),new Card("♥", 5),
+                                                  new Card("♠", 6),new Card("♣", 6),new Card("♦", 6),new Card("♥", 6)};
 
     public bool TryGiveCard(out Card card)
     {
@@ -105,6 +86,12 @@ class Diller
         card = _cards[0];
         _cards.RemoveAt(0);
         return true;
+    }
+
+    public void ShowAllCards()
+    {
+        foreach (var card in _cards)
+            card.Show();
     }
 }
 
