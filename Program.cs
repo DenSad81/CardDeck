@@ -12,10 +12,10 @@ class Program
         Player player = new Player("Jonn");
         Diller diller = new Diller();
 
-        Diller.ShowSituation(desk, player);
+        diller.ShowSituation(desk, player);
 
         Console.Write("How match cards player wonts to take: ");
-        int quantityOfCards = Diller.GetIntFromConsole();
+        int quantityOfCards = diller.GetIntFromConsole();
 
         for (int i = 0; i < quantityOfCards; i++)
         {
@@ -23,8 +23,8 @@ class Program
                 player.AcceptCard(card);
         }
 
-        Diller.ShowSituation(desk, player);
-    }   
+        diller.ShowSituation(desk, player);
+    }
 }
 
 class Card
@@ -46,7 +46,7 @@ class Card
 
 class Diller
 {
-    public static int GetIntFromConsole()
+    public  int GetIntFromConsole()
     {
         int digitToOut;
 
@@ -56,7 +56,7 @@ class Diller
         return digitToOut;
     }
 
-    public static void ShowSituation(Desk desc, Player player)
+    public  void ShowSituation(Desk desc, Player player)
     {
         Console.WriteLine();
         Console.WriteLine("Cards into desk");
@@ -69,12 +69,20 @@ class Diller
 
 class Desk
 {
-    private List<Card> _cards = new List<Card>() {new Card("♠", 1),new Card("♣", 1),new Card("♦", 1),new Card("♥", 1),
-                                                  new Card("♠", 2),new Card("♣", 2),new Card("♦", 2),new Card("♥", 2),
-                                                  new Card("♠", 3),new Card("♣", 3),new Card("♦", 3),new Card("♥", 3),
-                                                  new Card("♠", 4),new Card("♣", 4),new Card("♦", 4),new Card("♥", 4),
-                                                  new Card("♠", 5),new Card("♣", 5),new Card("♦", 5),new Card("♥", 5),
-                                                  new Card("♠", 6),new Card("♣", 6),new Card("♦", 6),new Card("♥", 6)};
+    private List<Card> _cards = new List<Card>() { };
+    private List<int> values = new List<int>() { 6, 7, 8, 9, 10, 11, 12 };
+    private List<string> suits = new List<string>() { "♠", "♣", "♦", "♥" };
+
+    public Desk()
+    {
+        foreach (var suit in suits)
+        {
+            foreach (var value in values)
+            {
+                _cards.Add(new Card(suit, value));
+            }
+        }
+    }
 
     public bool TryGiveCard(out Card card)
     {
