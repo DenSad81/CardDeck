@@ -8,22 +8,14 @@ class Program
 {
     static void Main(string[] args)
     {
-        Desk desk = new Desk();
+        Deck deck = new Deck();
         Player player = new Player("Jonn");
         Diller diller = new Diller();
 
-        diller.ShowSituation(desk, player);
-
-        Console.Write("How match cards player wonts to take: ");
-        int quantityOfCards = diller.GetIntFromConsole();
-
-        for (int i = 0; i < quantityOfCards; i++)
-        {
-            if (desk.TryGiveCard(out Card card))
-                player.AcceptCard(card);
-        }
-
-        diller.ShowSituation(desk, player);
+        deck.ShafflDeck();
+        diller.ShowSituation(deck, player);
+        diller.Game(deck, player);
+        diller.ShowSituation(deck, player);
     }
 }
 
@@ -46,7 +38,7 @@ class Card
 
 class Diller
 {
-    public  int GetIntFromConsole()
+    public int GetIntFromConsole()
     {
         int digitToOut;
 
@@ -56,7 +48,7 @@ class Diller
         return digitToOut;
     }
 
-    public  void ShowSituation(Desk desc, Player player)
+    public void ShowSituation(Deck desc, Player player)
     {
         Console.WriteLine();
         Console.WriteLine("Cards into desk");
@@ -65,23 +57,43 @@ class Diller
         Console.WriteLine("Cards into player");
         player.ShowAllCards();
     }
+
+    public void Game(Deck deck, Player player)
+    {
+        Console.Write("How match cards player wonts to take: ");
+        int quantityOfCards = GetIntFromConsole();
+
+        for (int i = 0; i < quantityOfCards; i++)
+        {
+            if (deck.TryGiveCard(out Card card))
+                player.AcceptCard(card);
+        }
+    }
 }
 
-class Desk
+class Deck
 {
-    private List<Card> _cards = new List<Card>() { };
-    private List<int> values = new List<int>() { 6, 7, 8, 9, 10, 11, 12 };
-    private List<string> suits = new List<string>() { "♠", "♣", "♦", "♥" };
+    private List<Card> _cards;
 
-    public Desk()
+    public Deck()
     {
+        _cards = CreateDesk();
+    }
+
+    private List<Card> CreateDesk()
+    {
+        List<int> values = new List<int>() { 6, 7, 8, 9, 10 };
+        List<string> suits = new List<string>() { "♠", "♣", "♦", "♥" };
+        List<Card> cards = new List<Card>();
         foreach (var suit in suits)
         {
             foreach (var value in values)
             {
-                _cards.Add(new Card(suit, value));
+                cards.Add(new Card(suit, value));
             }
         }
+
+        return cards;
     }
 
     public bool TryGiveCard(out Card card)
@@ -100,6 +112,19 @@ class Desk
     {
         foreach (var card in _cards)
             card.Show();
+    }
+
+    public void ShafflDeck()
+    {
+        Random random = new Random();
+
+        for (int i = 0; i < _cards.Count; i++)
+        {
+            int targetPositionInArray = random.Next(0, _cards.Count);
+            Card temp = _cards[targetPositionInArray];
+            _cards[targetPositionInArray] = _cards[i];
+            _cards[i] = temp;
+        }
     }
 }
 
